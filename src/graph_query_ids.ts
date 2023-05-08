@@ -19,7 +19,7 @@ export class GraphQuery {
       headers: {
         "User-Agent": UserAgent.Firefox,
       },
-      redirect: 'error',
+      redirect: 'follow',
     });
 
     const htmlText = await html.text();
