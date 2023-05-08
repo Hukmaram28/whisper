@@ -19,6 +19,7 @@ export class GraphQuery {
       headers: {
         "User-Agent": UserAgent.Firefox,
       },
+      redirect: 'error',
     });
 
     const htmlText = await html.text();
@@ -32,9 +33,8 @@ export class GraphQuery {
     }
     // console.log(apiJsId)
 
-    const link = `https://abs.twimg.com/responsive-web/client-web/api.${
-      apiJsId[1]
-    }a.js`;
+    const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId[1]
+      }a.js`;
     // console.log(link)
 
     const mainJs = await fetch(link);
