@@ -15,26 +15,27 @@ export class GraphQuery {
    * @returns Promise<GraphQueryId[]>
    */
   static getIds = async (): Promise<GraphQueryIds> => {
-    const html = await fetch(TwitterURL.WebClient.value, {
-      headers: {
-        "User-Agent": UserAgent.Firefox,
-      },
-      redirect: 'follow',
-    });
+    // const html = await fetch(TwitterURL.WebClient.value, {
+    //   headers: {
+    //     "User-Agent": UserAgent.Firefox,
+    //   },
+    // });
 
-    const htmlText = await html.text();
+    // const htmlText = await html.text();
     // console.log(htmlText)
 
     // get api.*..js from html
     // the format is `api:"9eacf99",`
-    const apiJsId = htmlText.match(/api:"([^"]+)",/);
+    // const apiJsId = htmlText.match(/api:"([^"]+)",/);
+    const apiJsId = '61bcaf3'
     if (apiJsId === null) {
       throw new Error("Cannot get api.*.js id");
     }
     // console.log(apiJsId)
-
-    const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId[1]
+    const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId
       }a.js`;
+    // const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId[1]
+    //   }a.js`;
     // console.log(link)
 
     const mainJs = await fetch(link);
