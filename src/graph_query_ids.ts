@@ -15,27 +15,46 @@ export class GraphQuery {
    * @returns Promise<GraphQueryId[]>
    */
   static getIds = async (): Promise<GraphQueryIds> => {
-    // const html = await fetch(TwitterURL.WebClient.value, {
-    //   headers: {
-    //     "User-Agent": UserAgent.Firefox,
-    //   },
-    // });
+    const firstRes = await fetch(TwitterURL.WebClient.value, {
+      headers: {
+        "User-Agent": UserAgent.Firefox,
+      },
+      redirect: "manual",
+    });
 
-    // const htmlText = await html.text();
+    firstRes.body?.cancel();
+
+    const setCookie = firstRes.headers.get("set-cookie");
+
+    const cookie = setCookie
+      ?.split(",")
+      .map((cookie) => {
+        return cookie.split(";")[0];
+      })
+      .join("; ") || "";
+
+    // retry
+    const html = await fetch(TwitterURL.WebClient.value, {
+      headers: {
+        "User-Agent": UserAgent.Firefox,
+        Cookie: cookie,
+      },
+    });
+
+    const htmlText = await html.text();
     // console.log(htmlText)
 
     // get api.*..js from html
     // the format is `api:"9eacf99",`
-    // const apiJsId = htmlText.match(/api:"([^"]+)",/);
-    const apiJsId = '61bcaf3'
+    const apiJsId = htmlText.match(/api:"([^"]+)",/);
     if (apiJsId === null) {
       throw new Error("Cannot get api.*.js id");
     }
     // console.log(apiJsId)
-    const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId
-      }a.js`;
-    // const link = `https://abs.twimg.com/responsive-web/client-web/api.${apiJsId[1]
-    //   }a.js`;
+
+    const link = `https://abs.twimg.com/responsive-web/client-web/api.${
+      apiJsId[1]
+    }a.js`;
     // console.log(link)
 
     const mainJs = await fetch(link);
